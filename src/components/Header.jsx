@@ -11,7 +11,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 function Header({ isOpen, setIsOpen }) {
 
     return (
-        <div className='relative'>
+        // <div className='relative'>
 
             <div className='flex items-center justify-between px-4 py-4 bg-black/50 backdrop-blur-md text-white sticky top-0 z-50'>
                 <div className='flex items-center gap-4'>
@@ -61,7 +61,7 @@ function Header({ isOpen, setIsOpen }) {
 
 
             </div>
-        </div>
+        // </div>
     )
 }
 

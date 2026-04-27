@@ -7,6 +7,7 @@ import { AiOutlineShopping } from "react-icons/ai";
 import { BiMovie } from "react-icons/bi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { CiFlag1 } from "react-icons/ci";
+import { Link } from 'react-router-dom';
 
 function Sidebar({ isOpen, setIsOpen }) {
     return (
@@ -40,10 +41,10 @@ function Sidebar({ isOpen, setIsOpen }) {
                     <div className='p-4'>
                         <div className='flex flex-col gap-2 text-[15px] pb-2 border-b-1'>
 
-                            <div className='flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer'>
+                            <Link to={'/'} className='flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer'>
                                 <MdHome size={22} />
                                 <span>Home</span>
-                            </div>
+                            </Link>
 
                             <div className='flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer'>
                                 <SiYoutubeshorts size={22} />
