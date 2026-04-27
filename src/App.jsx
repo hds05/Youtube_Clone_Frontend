@@ -5,6 +5,7 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   const [isOpen, setIsOpen] = useState(false)
@@ -14,6 +15,8 @@ function App() {
     <>
       <Header setIsOpen={setIsOpen} isOpen={isOpen} />
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Outlet />
+      
 
     </>
   )
