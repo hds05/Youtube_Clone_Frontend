@@ -1,10 +1,10 @@
 import React from 'react'
-import VideoList from './VideoList'
+import VideoList from '../components/VideoList'
 
 function HomePage() {
   return (
     <div>
-        <VideoList />
+      <VideoList />
     </div>
   )
 }

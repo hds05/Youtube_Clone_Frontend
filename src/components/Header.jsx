@@ -6,10 +6,11 @@ import { FaPlus } from "react-icons/fa6";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaRegUserCircle } from 'react-icons/fa';
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Search from './Search';
 
 
 function Header({ isOpen, setIsOpen }) {
-
+    const [searchText, setSearchText] = useState('')
     return (
         // <div className='relative'>
 
@@ -38,16 +39,7 @@ function Header({ isOpen, setIsOpen }) {
                 </div>
 
                 <div className='flex items-center justify-end sm:justify-center flex-1 mx-2 min-w-0'>
-                    <div className='flex sm:border sm:border-gray-700 sm:rounded-full overflow-hidden'>
-                        <input
-                            type="text"
-                            placeholder='Search'
-                            className='hidden sm:block w-full px-4 py-1 sm:bg-black outline-none'
-                        />
-                        <button className='p-2 md:px-4 sm:bg-gray-800 hover:bg-gray-700 rounded-full md:rounded-none'>
-                            <CiSearch size={18} />
-                        </button>
-                    </div>
+                    <Search setSearchText={setSearchText}/>
 
                     <div className='ml-2 p-2 sm:bg-gray-800 rounded-full hover:bg-gray-700 cursor-pointer'>
                         <MdMicNone size={18} />
@@ -56,7 +48,7 @@ function Header({ isOpen, setIsOpen }) {
 
                 <div className='flex items-center gap-2'>
                     <BsThreeDotsVertical size={22}/>
-                    <button className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:border-none hover:shadow-none'> <FaRegUserCircle size={22}/> Sign In</button>
+                    <button className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:border-none hover:shadow-none'> <FaRegUserCircle size={22}/> <span className='hidden sm:block'>Sign In</span></button>
                 </div>
 
 

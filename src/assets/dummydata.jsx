@@ -5,6 +5,7 @@ export const videos = [
         description: "A quick tutorial to get started with React.",
         thumbnailUrl: "https://i.ytimg.com/vi/PJWOv3taxMQ/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCj2v2bTzkgNybJuXB0TjyipERgnQ",
         uploader: "user01",
+        videoUrl:"https://youtu.be/PJWOv3taxMQ?si=zi6O0D6KNzqRoh2k",
         views: "15200",
         likes: "1023",
         dislikes: "1023",
@@ -24,6 +25,7 @@ export const videos = [
         description: "A quick tutorial to get started with React.",
         thumbnailUrl: "https://i.ytimg.com/vi/sjJi0TbmVnQ/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLADfEeyJPTIbkuo81sc6uHwP65nuA",
         uploader: "user01",
+        videoUrl:"https://youtu.be/sjJi0TbmVnQ?si=NvgSpeRpnrSC4Gq2",
         views: "15200",
         likes: "1023",
         dislikes: "1023",
@@ -43,6 +45,7 @@ export const videos = [
         description: "A quick tutorial to get started with React.",
         thumbnailUrl: "https://i.ytimg.com/vi/72DMrkE8jks/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLDBrb1RaU3uAgNqfsdi-1GmXPlJVQ",
         uploader: "user01",
+        videoUrl:"https://youtu.be/72DMrkE8jks?si=OIhFjg3DFfjHaffY",
         views: "12M views",
         likes: "1023",
         dislikes: "1023",
@@ -77,14 +80,15 @@ export const videos = [
     },
     {
         videoId: "5",
-        title: "HIP HOP | JAZZ RAP | BOOM BAP | Watching the City Breathe in Monochrome",
+        title: "🤔 Kyu Ram Ji 🐚 Se Ho Gaye Hanuman Ji ",
         description: "A quick tutorial to get started with React.",
         thumbnailUrl: "https://i.ytimg.com/vi/Wy6yZO2F3Dk/hq720.jpg?sqp=-oaymwEnCOgCEMoBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC_ylpjOsbXmCDV8FpebJ0boIMRmA",
         uploader: "user01",
-        views: "15200 views",
+        videoUrl:"",
+        views: "326 views",
         likes: "1023",
         dislikes: "1023",
-        channelId: "SECOND SENSE 스튜디오",
+        channelId: "Hari katha vaani",
         uploadDate: "2024-09-24",
         comments: [{
             commentId: "comment01",
@@ -92,7 +96,7 @@ export const videos = [
             text: "Great video! Very helpful.",
             timestamp: "2024-09-21T08:30:00Z"
         }],
-        time: "2 days ago"
+        time: "4 months ago"
     },
     {
         videoId: "6",

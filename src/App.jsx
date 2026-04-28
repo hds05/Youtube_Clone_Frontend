@@ -14,10 +14,12 @@ function App() {
   return (
     <>
       <Header setIsOpen={setIsOpen} isOpen={isOpen} />
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <Outlet />
-      
-
+      <div className="flex">
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div className={`flex transition-all duration-300 md:${isOpen ? "ml-56" : "ml-0"}`}>
+          <Outlet />
+        </div>
+      </div>
     </>
   )
 }
