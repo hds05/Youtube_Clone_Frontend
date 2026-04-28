@@ -70,7 +70,7 @@ function Sidebar({ isOpen, setIsOpen }) {
                         <div className='pb-2 flex flex-col gap-2 text-[15px] items-start border-b-1'>
                             <div className='p-4'>
                                 <h1 className=' text-sm'>Sign in to like videos, comment, and subscribe.</h1>
-                                <button className='cursor-pointer text-blue-500 flex items-center gap-2 rounded-full border-1 border-blue px-2 py-1 mt-2 hover:bg-blue-500/30'><FaRegUserCircle size={22} /> Sign up</button>
+                                <Link to={'/login'} className='cursor-pointer flex justify-center text-blue-500 flex items-center gap-2 rounded-full border-1 border-blue px-2 py-1 mt-2 hover:bg-blue-500/30'><FaRegUserCircle size={22} /> Sign In</Link>
                             </div>
                         </div>
 

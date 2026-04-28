@@ -7,6 +7,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaRegUserCircle } from 'react-icons/fa';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Search from './Search';
+import { Link } from 'react-router-dom';
 
 
 function Header({ isOpen, setIsOpen }) {
@@ -48,7 +49,7 @@ function Header({ isOpen, setIsOpen }) {
 
                 <div className='flex items-center gap-2'>
                     <BsThreeDotsVertical size={22}/>
-                    <button className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:border-none hover:shadow-none'> <FaRegUserCircle size={22}/> <span className='hidden sm:block'>Sign In</span></button>
+                    <Link to={'/login'} className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:border-none hover:shadow-none hover:text-blue-400'> <FaRegUserCircle size={22}/> <span className='hidden sm:block'>Sign In</span></Link>
                 </div>
 
 
