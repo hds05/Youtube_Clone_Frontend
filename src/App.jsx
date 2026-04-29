@@ -16,7 +16,7 @@ function App() {
       <Header setIsOpen={setIsOpen} isOpen={isOpen} />
       <div className="flex">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-        <div className={`flex transition-all duration-300 md:${isOpen ? "ml-56" : "ml-0"}`}>
+        <div className={`flex-1 transition-all duration-300 ${isOpen ? "md:ml-56" : "md:ml-0"}`}>
           <Outlet />
         </div>
       </div>

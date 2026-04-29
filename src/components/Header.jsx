@@ -7,10 +7,11 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaRegUserCircle } from 'react-icons/fa';
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Search from './Search';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function Header({ isOpen, setIsOpen }) {
+    const navigate = useNavigate()
     const [searchText, setSearchText] = useState('')
     return (
         // <div className='relative'>
@@ -20,7 +21,7 @@ function Header({ isOpen, setIsOpen }) {
                     <IoMenu size={30} onClick={() => setIsOpen(!isOpen)} className='cursor-pointer hover:bg-gray-800 p-1 rounded-full' />
                     <div className='flex items-center cursor-pointer'>
 
-                        <div className='w-full h-full block fill-white'>
+                        <div onClick={()=> navigate('/')} className='w-full h-full block fill-white'>
                             <svg xmlns="http://www.w3.org/2000/svg" id="yt-ringo2-svg_yt9" className='w-[80px] md:w-[90px]' height="20" viewBox="0 0 93 20" focusable="false" aria-hidden="true" >
                                 <g>
                                     <path d="M14.4848 20C14.4848 20 23.5695 20 25.8229 19.4C27.0917 19.06 28.0459 18.08 28.3808 16.87C29 14.65 29 9.98 29 9.98C29 9.98 29 5.34 28.3808 3.14C28.0459 1.9 27.0917 0.94 25.8229 0.61C23.5695 0 14.4848 0 14.4848 0C14.4848 0 5.42037 0 3.17711 0.61C1.9286 0.94 0.954148 1.9 0.59888 3.14C0 5.34 0 9.98 0 9.98C0 9.98 0 14.65 0.59888 16.87C0.954148 18.08 1.9286 19.06 3.17711 19.4C5.42037 20 14.4848 20 14.4848 20Z" fill="#FF0033"></path>

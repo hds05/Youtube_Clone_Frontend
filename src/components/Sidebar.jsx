@@ -7,9 +7,10 @@ import { AiOutlineShopping } from "react-icons/ai";
 import { BiMovie } from "react-icons/bi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { CiFlag1 } from "react-icons/ci";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Sidebar({ isOpen, setIsOpen }) {
+    const navigate = useNavigate()
     return (
         <>
             {
@@ -18,7 +19,7 @@ function Sidebar({ isOpen, setIsOpen }) {
 
                     <div className='flex items-center gap-4 p-4 bg-black sticky top-0'>
                         <IoMenu size={30} onClick={() => setIsOpen(!isOpen)} className='cursor-pointer hover:bg-gray-800 p-1 rounded-full' />
-                        <div className='flex items-center cursor-pointer'>
+                        <div onClick={()=> navigate('/')} className='flex items-center cursor-pointer'>
 
                             <div className='w-full h-full block fill-white'>
                                 <svg xmlns="http://www.w3.org/2000/svg" id="yt-ringo2-svg_yt9" className='w-[80px] md:w-[90px]' height="20" viewBox="0 0 93 20" focusable="false" aria-hidden="true" >
