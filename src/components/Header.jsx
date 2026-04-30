@@ -10,13 +10,14 @@ import Search from './Search';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ProfileMenu from './ProfileMenu';
+import { useSearch } from '../../context/SearchContext';
 
 
 function Header({ isOpen, setIsOpen }) {
     const navigate = useNavigate()
-    const [searchText, setSearchText] = useState('')
     const { user, logout } = useAuth()
     const [showMenu, setShowMenu] = useState(false);
+    const {setSearchText} = useSearch()
 
     return (
         // <div className='relative'>
