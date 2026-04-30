@@ -9,12 +9,15 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Search from './Search';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ProfileMenu from './ProfileMenu';
 
 
 function Header({ isOpen, setIsOpen }) {
     const navigate = useNavigate()
     const [searchText, setSearchText] = useState('')
     const { user, logout } = useAuth()
+    const [showMenu, setShowMenu] = useState(false);
+
     return (
         // <div className='relative'>
 
@@ -50,11 +53,6 @@ function Header({ isOpen, setIsOpen }) {
                 </div>
             </div>
 
-            {/* <div className='flex items-center gap-2'>
-                <BsThreeDotsVertical size={22} />
-                <Link to={'/login'} className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:border-none hover:shadow-none hover:text-blue-400'> <FaRegUserCircle size={22} /> <span className='hidden sm:block'>Sign In</span></Link>
-            </div> */}
-
             <div className='flex items-center gap-3'>
 
                 {user ? (
@@ -72,15 +70,21 @@ function Header({ isOpen, setIsOpen }) {
 
                         {/* Avatar */}
                         <div
-                            onClick={logout}
+                            onClick={() => setShowMenu(prev => !prev)}
                             className='bg-red-600 w-8 h-8 flex items-center justify-center rounded-full font-bold cursor-pointer'
                         >
                             {user.name?.charAt(0).toUpperCase()}
                         </div>
+                        <ProfileMenu
+                            open={showMenu}
+                            setOpen={setShowMenu}
+                            user={user}
+                            logout={logout}
+                        />
                     </>
                 ) : (
                     <>
-                        <BsThreeDotsVertical size={22} className='cursor-pointer'/>
+                        <BsThreeDotsVertical size={22} className='cursor-pointer' />
                         <Link
                             to={'/login'}
                             className='rounded-full shadow-[0px_0px_3px_gray_inset] flex gap-2 px-2 py-1 cursor-pointer hover:bg-gray-700 hover:text-blue-400'
