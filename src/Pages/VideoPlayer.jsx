@@ -1,6 +1,7 @@
 import React from 'react'
 import { videos } from '../assets/dummydata'
 import { useNavigate, useParams } from 'react-router-dom'
+import Comments from '../components/Comments'
 
 function VideoPlayer() {
   const { id } = useParams()
@@ -55,11 +56,11 @@ function VideoPlayer() {
                 {filtered.description}
               </p>
             </div>
-          </div>
-        </div>
 
-        <div>
-          {/* make comment section here */}
+            <div>
+              <Comments comments={filtered?.comments} />
+            </div>
+          </div>
         </div>
 
         <div className="w-full lg:w-[350px] bg-black/40 p-2 rounded-2xl flex flex-col gap-4">
