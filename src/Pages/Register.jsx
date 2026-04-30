@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { IoArrowBack } from 'react-icons/io5'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,12 +9,24 @@ function Register() {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  function handleRegister(e) {
+  const handleRegister = async (e) => {
     e.preventDefault()
-    const userData = {
-      name, email, password
+    // const userData = {
+    //   name, email, password
+    // }
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/register",
+        { name, email, password },
+        { withCredentials: true }
+      );
+      console.log(res.data);
+
+      navigate('/login')
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+      alert(err.response?.data?.message || "Something went wrong");
     }
-    navigate('/login')
   }
   return (
     <div className="bg-black fixed inset-0 z-50 p-2 flex justify-center items-center">
@@ -31,7 +44,7 @@ function Register() {
           <div className='flex flex-col'>
             <label className='text-sm text-gray-500'>Username</label>
             <input
-              type="Name"
+              type="text"
               placeholder="Your name"
               className="border p-2 rounded-md outline-blue-500"
               value={name}
