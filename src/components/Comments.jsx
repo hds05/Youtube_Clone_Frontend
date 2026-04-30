@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 
 function Comments({ comments = [] }) {
   const [newComment, setNewComment] = useState('')
   const [allComments, setAllComments] = useState(comments)
-
+  const { user } = useAuth()
   const handleAddComment = () => {
     if (!newComment.trim()) return
 
@@ -27,33 +28,33 @@ function Comments({ comments = [] }) {
       <h2 className="text-lg font-semibold mb-4">
         {allComments.length} Comments
       </h2>
+      {user &&
+        <div className="flex gap-3 mb-6">
+          <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+            {user.name[0].toUpperCase()}
+          </div>
 
-      <div className="flex gap-3 mb-6">
-        <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-          {/* user name's first letter */} U
-        </div>
+          <div className="flex w-full flex-col">
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="w-full bg-transparent border-b border-gray-600 outline-none p-2 text-sm"
+            />
 
-        <div className="flex w-full flex-col">
-          <input
-            type="text"
-            placeholder="Add a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="w-full bg-transparent border-b border-gray-600 outline-none p-2 text-sm"
-          />
+            <div className="flex justify-end gap-2 mt-2">
+              <button onClick={() => setNewComment('')} className="px-3 py-1 text-sm hover:bg-gray-800 rounded">
+                Cancel
+              </button>
 
-          <div className="flex justify-end gap-2 mt-2">
-            <button onClick={() => setNewComment('')} className="px-3 py-1 text-sm hover:bg-gray-800 rounded">
-              Cancel
-            </button>
-
-            <button onClick={handleAddComment} className="px-4 py-1 text-sm bg-blue-600 rounded-full hover:bg-blue-700">
-              Comment
-            </button>
+              <button onClick={handleAddComment} className="px-4 py-1 text-sm bg-blue-600 rounded-full hover:bg-blue-700">
+                Comment
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
+      }
       <div className="flex flex-col gap-4">
         {allComments.map((c) => (
           <div key={c.commentId} className="flex gap-3">
