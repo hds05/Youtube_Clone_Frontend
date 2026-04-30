@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,21 +9,31 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const userData = {
-      email, password
-    };
-
-    navigate("/");
+    try {
+      const res = await axios.post("http://localhost:3000/login", {
+        email,
+        password
+      })
+      // const userData = {
+      //   email, password
+      // };
+      console.log(res)
+      localStorage.setItem("token", res.data.token)
+      navigate("/");
+    }
+    catch (err) {
+      console.log(err.message)
+    }
   };
 
   return (
     <div className="bg-black fixed inset-0 z-50 p-2 flex justify-center items-center">
 
       <div className="bg-white w-[350px] rounded-xl p-6 shadow-lg">
-        <button onClick={()=> navigate('/')} className=" hover:bg-gray-300 rounded-full p-2 cursor-pointer">
+        <button onClick={() => navigate('/')} className=" hover:bg-gray-300 rounded-full p-2 cursor-pointer">
           <IoArrowBack size={22} />
         </button>
         <div className="text-center mb-4">
