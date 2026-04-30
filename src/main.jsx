@@ -7,6 +7,7 @@ import HomePage from './Pages/HomePage.jsx'
 import Login from './Pages/Login.jsx'
 import Register from './Pages/Register.jsx'
 import VideoPlayer from './Pages/VideoPlayer.jsx'
+import { AuthProvider } from '../context/AuthContext.jsx'
 
 const appRouter = createBrowserRouter([
   {
@@ -34,6 +35,8 @@ const appRouter = createBrowserRouter([
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={appRouter} />
+    <AuthProvider>
+      <RouterProvider router={appRouter} />
+    </AuthProvider>
   </StrictMode>,
 )
