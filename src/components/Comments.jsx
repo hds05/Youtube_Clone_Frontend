@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 
 function Comments({ comments = [] }) {
   const [newComment, setNewComment] = useState('')
-  const [allComments, setAllComments] = useState(comments)
+  const [allComments, setAllComments] = useState([])
   const { user } = useAuth()
+
+  useEffect(() => {
+    setAllComments(comments)
+  }, [comments])
+
   const handleAddComment = () => {
+    if (!user) {
+      alert("Login required");
+      return;
+    }
     if (!newComment.trim()) return
 
     const comment = {
@@ -18,10 +27,10 @@ function Comments({ comments = [] }) {
     setAllComments([comment, ...allComments])
     setNewComment('')
   }
-
   const handleDelete = (id) => {
     setAllComments(allComments.filter(c => c.commentId !== id))
   }
+
 
   return (
     <div className="mt-6">
@@ -76,9 +85,10 @@ function Comments({ comments = [] }) {
               <div className="flex gap-3 mt-2 text-xs text-gray-400">
                 <button className="hover:text-white">👍 Like</button>
                 <button className="hover:text-white">👎 Dislike</button>
-                <button onClick={() => handleDelete(c.commentId)} className="hover:text-red-400">
-                  Delete
-                </button>
+                {user &&
+                  <button onClick={() => handleDelete(c.commentId)} className="hover:text-red-400">
+                    Delete
+                  </button>}
               </div>
             </div>
 
