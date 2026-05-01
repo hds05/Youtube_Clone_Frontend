@@ -1,13 +1,39 @@
-import React from 'react'
-import { videos } from '../assets/dummydata'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Comments from '../components/Comments'
+import axios from 'axios'
+import { useSearch } from '../../context/SearchContext'
 
 function VideoPlayer() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  console.log(id);
 
-  const filtered = videos.find((e) => e.videoId === id)
+  const navigate = useNavigate()
+  const [video, setVideo] = useState(null)
+  const [videos, setVideos] = useState([])
+
+  const { searchText } = useSearch()
+
+  useEffect(() => {
+    axios.get(`http://localhost:3000/video/${id}`)
+      .then(res => {
+        setVideo(res.data);
+        console.log(res.data);
+      })
+      .catch(err => { console.log(err) })
+    axios.get("http://localhost:3000/videos")
+      .then(res => setVideos(res.data))
+      .catch(err => console.log(err))
+
+  }, [id]);
+
+  const filteredVideos = videos.filter((video) => {
+        const matchesSearch =
+            video.title?.toLowerCase().includes(searchText.toLowerCase())
+
+        return matchesSearch
+    })
+
   return (
     <div className=" text-white min-h-screen p-4">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -25,19 +51,19 @@ function VideoPlayer() {
 
           <div className="mt-4">
             <h1 className="text-lg md:text-xl font-semibold">
-              {filtered?.title}
+              {video?.title}
             </h1>
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-3 gap-4">
               <div className="flex items-center gap-3">
                 <img
-                  src={filtered?.channelIcon}
+                  src={video?.channelIcon}
                   alt="channel"
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <p className="font-medium">{filtered?.channelId}</p>
-                  <p className="text-sm text-gray-400">{filtered?.subscribers}</p>
+                  <p className="font-medium">{video?.channelId}</p>
+                  <p className="text-sm text-gray-400">{video?.subscribers}</p>
                 </div>
                 <button className="ml-4 bg-white text-black px-4 py-1 rounded-full font-medium cursor-pointer">
                   Subscribe
@@ -45,26 +71,26 @@ function VideoPlayer() {
               </div>
 
               <div className="flex gap-3">
-                <button className="bg-gray-800 px-3 py-1 rounded-full cursor-pointer">👍 <span className='border-l-1 pl-2'> {filtered.likes}</span></button>
-                <button className="bg-gray-800 px-3 py-1 rounded-full cursor-pointer">👎 <span className='border-l-1 pl-2'> {filtered.dislikes}</span></button>
+                <button className="bg-gray-800 px-3 py-1 rounded-full cursor-pointer">👍 <span className='border-l-1 pl-2'> {video?.likes}k</span></button>
+                <button className="bg-gray-800 px-3 py-1 rounded-full cursor-pointer">👎 <span className='border-l-1 pl-2'> {video?.dislikes}k</span></button>
                 <button className="bg-gray-800 px-3 py-1 rounded-full cursor-pointer">🔗 Share</button>
               </div>
             </div>
 
             <div className="bg-gray-900 p-3 rounded-lg mt-4 text-sm text-gray-300">
               <p>
-                {filtered.description}
+                {video?.description}
               </p>
             </div>
 
             <div>
-              <Comments comments={filtered?.comments} />
+              <Comments comments={video?.comments} />
             </div>
           </div>
         </div>
 
         <div className="w-full lg:w-[350px] bg-black/40 p-2 rounded-2xl flex flex-col gap-4">
-          {videos.map((item) => (
+          {filteredVideos.map((item) => (
             <div key={item.videoId} onClick={() => navigate(`/video/${item.videoId}`)} className="flex gap-3 cursor-pointer">
               <img src={item.thumbnailUrl} className="w-40 h-24 bg-gray-800 rounded-lg" />
               <div className="flex flex-col">
