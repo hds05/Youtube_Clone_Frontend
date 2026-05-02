@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function ProfileMenu({
     open,
@@ -24,9 +25,9 @@ export default function ProfileMenu({
                         <p className="text-md">
                             {user.email}
                         </p>
-                        <button className="w-full cursor-pointer text-left text-blue-500">
+                        <Link to={'/channel'} className="w-full cursor-pointer text-left text-blue-500">
                             View your Channel
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div className="my-2 mx-2 border-t"></div>
