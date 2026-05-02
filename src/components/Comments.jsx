@@ -36,9 +36,9 @@ function Comments({ comments = [] }) {
   const handleDelete = (id) => {
     setAllComments(allComments.filter(c => c.commentId !== id))
   }
-  const handleEditStart = (comment) => {
-    setEditingId(comment.commentId)
-    setEditText(comment.text)
+  const handleEditStart = (e) => {
+    setEditingId(e.commentId)
+    setEditText(e.text)
   }
   const handleEditSave = (id) => {
     if (!editText.trim()) return
