@@ -3,7 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function UploadVideo() {
+function UploadVideo({ setUpload }) {
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function UploadVideo() {
     description: "",
     category: "",
     thumbnailUrl: "",
-    videoId: ""
+    videoId: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ function UploadVideo() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -38,20 +38,15 @@ function UploadVideo() {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:3000/upload",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const res = await axios.post("http://localhost:3000/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       alert("Video Uploaded");
-
-      navigate("/channel");
-
+      setUpload(false)
+    //   navigate("/channel");
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || "Upload failed");
@@ -61,13 +56,12 @@ function UploadVideo() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black text-white flex justify-center items-center">
-
+    <div className="fixed inset-0 bg-black text-white flex justify-center items-center z-50">
       <div className="bg-zinc-900 p-6 rounded-xl w-[500px] flex flex-col gap-4">
-
-        <h1 className="text-2xl font-bold">
-          Upload Video
-        </h1>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold">Upload Video</h1>
+          <button onClick={()=> {setUpload(false)}} className="text-white cursor-pointer bg-red-800 p-2 rounded-full">X</button>
+        </div>
 
         <input
           type="text"
@@ -120,7 +114,6 @@ function UploadVideo() {
         >
           {loading ? "Uploading..." : "Upload"}
         </button>
-
       </div>
     </div>
   );
