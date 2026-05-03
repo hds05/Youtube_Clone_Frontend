@@ -29,9 +29,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (isTokenExpired(storedToken)) {
+      window.location.href = "/";
       logout();
       setLoading(false);
-      window.location.href = "/";
       return;
     }
 
@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }) => {
     const interval = setInterval(() => {
       if (isTokenExpired(token)) {
         logout();
+        window.location.href= '/'
       }
     }, 60000); // check every 1 minute
 
