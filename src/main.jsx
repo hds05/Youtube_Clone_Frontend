@@ -7,6 +7,7 @@ import { AuthProvider } from "../context/AuthContext.jsx";
 import { SearchProvider } from "../context/SearchContext.jsx";
 import Loader from "./components/Loader.jsx";
 
+// const UploadVideo = lazy(() => import("./components/UploadVideo.jsx"));
 const HomePage = lazy(() => import("./Pages/HomePage.jsx"));
 const Login = lazy(() => import("./Pages/Login.jsx"));
 const Register = lazy(() => import("./Pages/Register.jsx"));
@@ -19,15 +20,22 @@ const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: (<Suspense fallback={<Loader />}>
-      <NotFoundPage />
-    </Suspense>),
+    errorElement: (
+      <Suspense fallback={<Loader />}>
+        <NotFoundPage />
+      </Suspense>
+    ),
     children: [
       {
         path: "/",
         element: (
           <Suspense fallback={<Loader />}>
             <HomePage />
+          </Suspense>
+        ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
           </Suspense>
         ),
       },
@@ -38,12 +46,22 @@ const appRouter = createBrowserRouter([
             <Login />
           </Suspense>
         ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
+          </Suspense>
+        ),
       },
       {
         path: "/register",
         element: (
           <Suspense fallback={<Loader />}>
             <Register />
+          </Suspense>
+        ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
           </Suspense>
         ),
       },
@@ -54,12 +72,22 @@ const appRouter = createBrowserRouter([
             <VideoPlayer />
           </Suspense>
         ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
+          </Suspense>
+        ),
       },
       {
         path: "/channel",
         element: (
           <Suspense fallback={<Loader />}>
             <ChannelPage />
+          </Suspense>
+        ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
           </Suspense>
         ),
       },
@@ -70,7 +98,25 @@ const appRouter = createBrowserRouter([
             <CreateChannel />
           </Suspense>
         ),
+        errorElement: (
+          <Suspense fallback={<Loader />}>
+            <NotFoundPage />
+          </Suspense>
+        ),
       },
+      //   {
+      //     path: "/upload",
+      //     element: (
+      //       <Suspense fallback={<Loader />}>
+      //         <UploadVideo />
+      //       </Suspense>
+      //     ),
+      //         errorElement: (
+      //   <Suspense fallback={<Loader />}>
+      //     <NotFoundPage />
+      //   </Suspense>
+      // )
+      //   },
     ],
   },
 ]);
