@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 function UploadVideo({ setUpload }) {
   const { token } = useAuth();
@@ -12,8 +13,11 @@ function UploadVideo({ setUpload }) {
     description: "",
     category: "",
     thumbnailUrl: "",
-    videoId: "",
+    videoType: "youtube",
+    videoUrl: "",
   });
+
+  const [videoFile, setVideoFile] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -24,12 +28,26 @@ function UploadVideo({ setUpload }) {
     });
   };
 
+  const handleFileChange = (e) => {
+    setVideoFile(e.target.files[0]);
+  };
+
+  const extractYoutubeId = (url) => {
+    try {
+      const regExp = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+      const match = url.match(regExp);
+      return match ? match[1] : url;
+    } catch (err) {
+      return url;
+    }
+  };
+
   const handleSubmit = async () => {
     if (
       !formData.title ||
       !formData.description ||
-      !formData.thumbnailUrl ||
-      !formData.videoId
+      !formData.category ||
+      !formData.thumbnailUrl
     ) {
       alert("Fill all fields");
       return;
@@ -38,15 +56,32 @@ function UploadVideo({ setUpload }) {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://localhost:3000/upload", formData, {
+      const data = new FormData();
+
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("category", formData.category);
+      data.append("thumbnailUrl", formData.thumbnailUrl);
+      data.append("videoType", formData.videoType);
+
+      if (formData.videoType === "youtube") {
+        const videoId = extractYoutubeId(formData.videoUrl);
+        data.append("videoUrl", videoId);
+      }
+
+      if (formData.videoType === "upload") {
+        data.append("videoFile", videoFile);
+      }
+
+      const res = await axios.post("http://localhost:3000/upload", data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      alert("Video Uploaded");
-      setUpload(false)
-    //   navigate("/channel");
+      alert("Video Uploaded Successfully");
+      setUpload(false);
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || "Upload failed");
@@ -56,11 +91,16 @@ function UploadVideo({ setUpload }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black text-white flex justify-center items-center z-50">
-      <div className="bg-zinc-900 p-6 rounded-xl w-[500px] flex flex-col gap-4">
-        <div className="flex justify-between">
+    <div className="fixed inset-0 bg-black/80 text-white flex justify-center items-center z-50">
+      <div className="bg-zinc-900 p-6 m-2 rounded-xl w-[500px] flex flex-col gap-4">
+        <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Upload Video</h1>
-          <button onClick={()=> {setUpload(false)}} className="text-white cursor-pointer bg-red-800 p-2 rounded-full">X</button>
+          <button
+            onClick={() => setUpload(false)}
+            className="text-white cursor-pointer rounded-full"
+          >
+            <IoIosCloseCircleOutline size={25} className="text-red-500" />
+          </button>
         </div>
 
         <input
@@ -98,14 +138,35 @@ function UploadVideo({ setUpload }) {
           className="p-3 rounded bg-zinc-800 outline-none"
         />
 
-        <input
-          type="text"
-          name="videoId"
-          placeholder="Video Id"
-          value={formData.videoId}
+        <select
+          name="videoType"
+          value={formData.videoType}
           onChange={handleChange}
           className="p-3 rounded bg-zinc-800 outline-none"
-        />
+        >
+          <option value="youtube">YouTube Video</option>
+
+          <option value="upload">Upload From Device</option>
+        </select>
+
+        {formData.videoType === "youtube" ? (
+          <input
+            type="text"
+            name="videoUrl"
+            placeholder="Paste YouTube Link"
+            value={formData.videoUrl}
+            onChange={handleChange}
+            className="p-3 rounded bg-zinc-800 outline-none"
+          />
+        ) : (
+          <input
+            type="file"
+            name="videoFile"
+            accept="video/*"
+            onChange={handleFileChange}
+            className="p-3 rounded text-gray-400 bg-zinc-600 cursor-pointer"
+          />
+        )}
 
         <button
           onClick={handleSubmit}
