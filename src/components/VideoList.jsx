@@ -23,6 +23,7 @@ function VideoList({ category }) {
     };
     data();
   }, []);
+  console.log(videos, "from video list....");
   const filteredVideos = videos.filter((video) => {
     const matchesCategory =
       category === "All" ||
@@ -43,7 +44,7 @@ function VideoList({ category }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
           {filteredVideos.map((e) => (
-            <VideoCard key={e.videoId} data={e} />
+            <VideoCard key={e._id} data={e} />
           ))}
         </div>
       )}
