@@ -38,7 +38,7 @@ function Channel() {
   return (
     <div className="text-white p-4">
       {videos ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {videos.map((video) => (
             <VideoCard key={video._id} data={video} />
           ))}

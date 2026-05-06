@@ -114,7 +114,7 @@ function VideoPlayer() {
             </div>
 
             <div>
-              <Comments comments={video?.comments} />
+              <Comments comments={video?.comments} videoId={video?._id} />
             </div>
           </div>
         </div>
