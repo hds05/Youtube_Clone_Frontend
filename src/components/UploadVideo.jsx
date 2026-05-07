@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
-function UploadVideo({ setUpload }) {
+function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos }) {
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -56,45 +56,76 @@ function UploadVideo({ setUpload }) {
     try {
       setLoading(true);
 
-      const data = new FormData();
+      const data = {
+        ...formData,
+        videoUrl:
+          formData.videoType === "youtube"
+            ? extractYoutubeId(formData.videoUrl)
+            : formData.videoUrl,
+      };
 
-      data.append("title", formData.title);
-      data.append("description", formData.description);
-      data.append("category", formData.category);
-      data.append("thumbnailUrl", formData.thumbnailUrl);
-      data.append("videoType", formData.videoType);
+      let res;
 
-      if (formData.videoType === "youtube") {
-        const videoId = extractYoutubeId(formData.videoUrl);
-        data.append("videoUrl", videoId);
+      if (editMode) {
+        res = await axios.put(
+          `http://localhost:3000/video/${videoData._id}/edit`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        alert("Video Updated Successfully");
+      } else {
+        const form = new FormData();
+
+        Object.keys(formData).forEach((key) => {
+          form.append(key, formData[key]);
+        });
+
+        if (formData.videoType === "upload") {
+          form.append("videoFile", videoFile);
+        }
+
+        res = await axios.post("http://localhost:3000/upload", form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        alert("Video Uploaded Successfully");
       }
 
-      if (formData.videoType === "upload") {
-        data.append("videoFile", videoFile);
-      }
-
-      const res = await axios.post("http://localhost:3000/upload", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      alert("Video Uploaded Successfully");
       setUpload(false);
     } catch (err) {
       console.log(err);
-      alert(err.response?.data?.message || "Upload failed");
+      alert(err.response?.data?.message || "Operation failed");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (editMode && videoData) {
+      setFormData({
+        title: videoData.title,
+        description: videoData.description,
+        category: videoData.category,
+        thumbnailUrl: videoData.thumbnailUrl,
+        videoType: videoData.videoType,
+        videoUrl: videoData.videoUrl,
+      });
+    }
+  }, [editMode, videoData]);
+
   return (
     <div className="fixed inset-0 bg-black/80 text-white flex justify-center items-center z-50">
       <div className="bg-zinc-900 p-6 m-2 rounded-xl w-[500px] flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Upload Video</h1>
+          <h1>{editMode ? "Edit Video" : "Upload Video"}</h1>
           <button
             onClick={() => setUpload(false)}
             className="text-white cursor-pointer rounded-full"
@@ -173,7 +204,13 @@ function UploadVideo({ setUpload }) {
           disabled={loading}
           className="bg-red-600 p-3 rounded hover:bg-red-700"
         >
-          {loading ? "Uploading..." : "Upload"}
+          {loading
+            ? editMode
+              ? "Updating..."
+              : "Uploading..."
+            : editMode
+              ? "Updated"
+              : "Uploaded"}
         </button>
       </div>
     </div>
