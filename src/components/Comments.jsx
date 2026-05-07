@@ -12,10 +12,6 @@ function Comments({ comments = [], videoId }) {
   const navigate = useNavigate();
   const { user, token } = useAuth();
 
-  useEffect(() => {
-    setAllComments(comments);
-  }, [comments]);
-
   const handleAddComment = async () => {
     if (!user) {
       alert("Login required");
@@ -41,33 +37,63 @@ function Comments({ comments = [], videoId }) {
       alert("Failed to upload comment due to: ", err.message);
     }
   };
-  const handleDelete = (id) => {
-    setAllComments(allComments.filter((c) => c._id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3000/video/${videoId}/deleteComment`,
+        {
+          data: { commentId: id },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setAllComments(res.data.comments);
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+      alert("Not able to delete the comment!!");
+    }
   };
   const handleEditStart = (e) => {
     setEditingId(e._id);
     setEditText(e.text);
   };
-  const handleEditSave = (id) => {
+  console.log(allComments, "all comments");
+  
+  const handleEditSave = async (id) => {
     if (!editText.trim()) return;
 
-    const updatedComments = allComments.map((c) => {
-      if (c._id === id) {
-        return {
-          ...c,
+    try {
+      const res = await axios.put(
+        `http://localhost:3000/video/${videoId}/editComment`,
+        {
+          commentId: id,
           text: editText,
-        };
-      }
-      return c;
-    });
-    setAllComments(updatedComments);
-    setEditingId(null);
-    setEditText("");
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setAllComments(res.data.comments);
+      setEditingId(null);
+      setEditText("");
+    } catch (err) {
+      console.log(err.message, "from comment edit");
+      alert("Not able to edit the comment!!!");
+    }
   };
   const handleEditCancel = () => {
     setEditingId(null);
     setEditText("");
   };
+
+  useEffect(() => {
+    console.log("Comments from backend:", comments);
+    setAllComments(comments);
+  }, [comments]);
 
   return (
     <div className="mt-6">
@@ -92,14 +118,14 @@ function Comments({ comments = [], videoId }) {
             <div className="flex justify-end gap-2 mt-2">
               <button
                 onClick={() => setNewComment("")}
-                className="px-3 py-1 text-sm hover:bg-gray-800 rounded"
+                className="px-3 py-1 text-sm hover:bg-gray-800 rounded cursor-pointer"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleAddComment}
-                className="px-4 py-1 text-sm bg-blue-600 rounded-full hover:bg-blue-700"
+                className="px-4 py-1 text-sm bg-blue-600 rounded-full hover:bg-blue-700 cursor-pointer"
               >
                 Comment
               </button>
@@ -115,75 +141,83 @@ function Comments({ comments = [], videoId }) {
         </button>
       )}
       <div className="flex flex-col gap-4">
-        {allComments.map((c) => (
-          <div key={c._id} className="flex gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-              {(c.userId?.name || "U")?.[0]?.toUpperCase()}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold">{c.userId?.name || "User"}</span>
-
-                <span className="text-gray-400 text-xs">
-                  {new Date(c.timestamp).toLocaleDateString()}
-                </span>
+        {allComments.map((c) => {
+          console.log("Logged in user:", user);
+          console.log("Comment:", c);
+          return (
+            <div key={c._id} className="flex gap-3">
+              <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                {(c.userId?.name || c.userName || "U")[0]?.toUpperCase()}
               </div>
-              {editingId === c._id ? (
-                <div className="mt-2 flex flex-col gap-2">
-                  <input
-                    type="text"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    className="bg-transparent border border-gray-600 rounded p-2 text-sm outline-none"
-                  />
 
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditSave(c._id)}
-                      className="text-xs bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"
-                    >
-                      Save
-                    </button>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-semibold">
+                    {c.userName || c.userId?.name || "User"}
+                  </span>
 
-                    <button
-                      onClick={handleEditCancel}
-                      className="text-xs bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <span className="text-gray-400 text-xs">
+                    {new Date(c.timestamp).toLocaleDateString()}
+                  </span>
                 </div>
-              ) : (
-                <p className="text-sm mt-1">{c.text}</p>
-              )}
+                {editingId === c._id ? (
+                  <div className="mt-2 flex flex-col gap-2">
+                    <input
+                      type="text"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="bg-transparent border border-gray-600 rounded p-2 text-sm outline-none"
+                    />
 
-              <div className="flex gap-3 mt-2 text-xs text-gray-400">
-                <button className="hover:text-white">👍 Like</button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditSave(c._id)}
+                        className="text-xs bg-blue-600 px-3 py-1 rounded hover:bg-blue-700"
+                      >
+                        Save
+                      </button>
 
-                <button className="hover:text-white">👎 Dislike</button>
-
-                {user && user._id === c.userId?._id && (
-                  <>
-                    <button
-                      onClick={() => handleEditStart(c)}
-                      className="hover:text-blue-400"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(c._id)}
-                      className="hover:text-red-400"
-                    >
-                      Delete
-                    </button>
-                  </>
+                      <button
+                        onClick={handleEditCancel}
+                        className="text-xs bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm mt-1">{c.text}</p>
                 )}
+
+                <div className="flex gap-3 mt-2 text-xs text-gray-400">
+                  <button className="hover:text-white">👍 Like</button>
+
+                  <button className="hover:text-white">👎 Dislike</button>
+
+                  {user &&
+                    (String(user.id) === String(c.userId?._id) ||
+                      user.name === c.userName) && (
+                      <>
+                        <button
+                          onClick={() => handleEditStart(c)}
+                          className="hover:text-blue-400 cursor-pointer"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(c._id)}
+                          className="hover:text-red-400 cursor-pointer"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
