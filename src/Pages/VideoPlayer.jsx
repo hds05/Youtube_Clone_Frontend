@@ -40,7 +40,7 @@ function VideoPlayer() {
   if (!video) {
     return (
       <div className="text-white md:text-4xl text-center flex justify-center items-center h-screen">
-        We are so sorry!!!🙆 <br /> Don't have this video... 
+        We are so sorry!!!🙆 <br /> Don't have this video...
       </div>
     );
   }
@@ -76,13 +76,16 @@ function VideoPlayer() {
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-3 gap-4">
               <div className="flex items-center gap-3">
-                {/* <img
-                  src={video?.channelIcon}
-                  alt="channel"
-                  className="w-10 h-10 rounded-full"
-                /> */}
                 <div className="w-10 md:w-15 h-10 md:h-15 rounded-full bg-red-600 flex items-center justify-center md:text-3xl font-bold">
-                  {video.channelName?.charAt(0).toUpperCase()}
+                  {video?.channelIcon ? (
+                    <img
+                      src={video?.channelIcon}
+                      alt="channelIcon"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    video.channelName?.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <div>
                   <p className="font-medium">{video?.channelName}</p>
