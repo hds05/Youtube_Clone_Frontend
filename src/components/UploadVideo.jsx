@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
+// import axios for APIs
 import axios from "axios";
+// useAuth hook used to get token from AuthContext
 import { useAuth } from "../../context/AuthContext";
+// Hook used for navigation between pages
 import { useNavigate } from "react-router-dom";
+// import close icon
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
-function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos }) {
+function UploadVideo({
+  setUpload,
+  editMode = false,
+  videoData,
+  refreshVideos,
+}) {
+  // Get token from useAuth
   const { token } = useAuth();
+  // for page navigation
   const navigate = useNavigate();
 
+  // State to store form fields
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -16,33 +28,46 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
     videoType: "youtube",
     videoUrl: "",
   });
-
+  // State to store uploaded video file
   const [videoFile, setVideoFile] = useState(null);
 
+  // Loading state while uploading/updating
   const [loading, setLoading] = useState(false);
 
+  // Function to handle text input changes
   const handleChange = (e) => {
+    // Updating formData state
     setFormData({
       ...formData,
+      // Dynamic field update
       [e.target.name]: e.target.value,
     });
   };
 
+  // Function to handle file selection
   const handleFileChange = (e) => {
+    // Store selected video file
     setVideoFile(e.target.files[0]);
   };
 
+  // Function to extract YouTube video ID from full URL
   const extractYoutubeId = (url) => {
     try {
+      // Regex to match youtube video id
       const regExp = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
+      // Match url with regex
       const match = url.match(regExp);
+      // Return matched ID
       return match ? match[1] : url;
     } catch (err) {
+      // If error occurs return original url
       return url;
     }
   };
 
+  // Function to upload or edit video
   const handleSubmit = async () => {
+    // Checking required fields
     if (
       !formData.title ||
       !formData.description ||
@@ -56,42 +81,88 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
     try {
       setLoading(true);
 
-      const data = {
-        ...formData,
-        videoUrl:
-          formData.videoType === "youtube"
-            ? extractYoutubeId(formData.videoUrl)
-            : formData.videoUrl,
-      };
-
       let res;
 
-      if (editMode) {
-        res = await axios.put(
-          `http://localhost:3000/video/${videoData._id}/edit`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+// Edit video
+if (editMode) {
 
-        alert("Video Updated Successfully");
-      } else {
+  // create form data for edit
+  const form = new FormData();
+
+  // append basic fields
+  form.append("title", formData.title);
+  form.append("description", formData.description);
+  form.append("category", formData.category);
+  form.append("thumbnailUrl", formData.thumbnailUrl);
+  form.append("videoType", formData.videoType);
+
+  // if youtube video
+  if (formData.videoType === "youtube") {
+
+    // append extracted youtube video id
+    form.append(
+      "videoUrl",
+      extractYoutubeId(formData.videoUrl)
+    );
+
+  } else {
+
+    // append uploaded file if selected
+    if (videoFile) {
+      form.append("video", videoFile);
+    }
+  }
+
+  // API request to update video
+  res = await axios.put(
+    `http://localhost:3000/video/${videoData._id}/edit`,
+    form,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  alert("Video Updated Successfully");
+} else {
+        // Upload video
+
+        // FormData used for file uploads
         const form = new FormData();
 
-        Object.keys(formData).forEach((key) => {
-          form.append(key, formData[key]);
-        });
+        // append basic fields
+        form.append("title", formData.title);
+        form.append("description", formData.description);
+        form.append("category", formData.category);
+        form.append("thumbnailUrl", formData.thumbnailUrl);
+        form.append("videoType", formData.videoType);
 
-        if (formData.videoType === "upload") {
-          form.append("videoFile", videoFile);
+        // if youtube video
+        if (formData.videoType === "youtube") {
+          // append youtube video id
+          form.append("videoUrl", extractYoutubeId(formData.videoUrl));
+        } else {
+          // append uploaded video file
+          if (videoFile) {
+            form.append("video", videoFile);
+          }
         }
 
+        // If user selected upload option
+        if (formData.videoType === "upload") {
+          // Add video file
+          form.append("video", videoFile);
+        }
+
+        // API request to upload video
         res = await axios.post("http://localhost:3000/upload", form, {
           headers: {
+            // Sending token
             Authorization: `Bearer ${token}`,
+
+            // Required for file uploads
             "Content-Type": "multipart/form-data",
           },
         });
@@ -99,17 +170,25 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
         alert("Video Uploaded Successfully");
       }
 
+      // Refresh video list after upload/edit
+      refreshVideos();
+
+      // close modal
       setUpload(false);
     } catch (err) {
-      console.log(err);
+      // Show backend error if available
       alert(err.response?.data?.message || "Operation failed");
     } finally {
+      // stop loading
       setLoading(false);
     }
   };
 
+  // Run when editMode or videoData changes
   useEffect(() => {
+    // If editing existing video
     if (editMode && videoData) {
+      // Fill form with old video data
       setFormData({
         title: videoData.title,
         description: videoData.description,
@@ -125,7 +204,10 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
     <div className="fixed inset-0 bg-black/80 text-white flex justify-center items-center z-50">
       <div className="bg-zinc-900 p-6 m-2 rounded-xl w-[500px] flex flex-col gap-4">
         <div className="flex justify-between items-center">
+          {/* Title changes based on mode */}
           <h1>{editMode ? "Edit Video" : "Upload Video"}</h1>
+
+          {/* Close button */}
           <button
             onClick={() => setUpload(false)}
             className="text-white cursor-pointer rounded-full"
@@ -134,6 +216,7 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
           </button>
         </div>
 
+        {/* Title input field */}
         <input
           type="text"
           name="title"
@@ -142,7 +225,7 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
           onChange={handleChange}
           className="p-3 rounded bg-zinc-800 outline-none"
         />
-
+        {/* Description input field */}
         <textarea
           name="description"
           placeholder="Video Description"
@@ -151,6 +234,7 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
           className="p-3 rounded bg-zinc-800 outline-none"
         />
 
+        {/* Category input field */}
         <input
           type="text"
           name="category"
@@ -160,6 +244,7 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
           className="p-3 rounded bg-zinc-800 outline-none"
         />
 
+        {/* Thumbnail Url input field */}
         <input
           type="text"
           name="thumbnailUrl"
@@ -169,18 +254,22 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
           className="p-3 rounded bg-zinc-800 outline-none"
         />
 
+        {/* Video type dropdown */}
         <select
           name="videoType"
           value={formData.videoType}
           onChange={handleChange}
           className="p-3 rounded bg-zinc-800 outline-none"
         >
+          {/* Select to upload youtube video */}
           <option value="youtube">YouTube Video</option>
-
+          {/* Select to upload video from local system */}
           <option value="upload">Upload From Device</option>
         </select>
 
+        {/* If youtube selected */}
         {formData.videoType === "youtube" ? (
+          // Show youtube URL input
           <input
             type="text"
             name="videoUrl"
@@ -190,27 +279,31 @@ function UploadVideo({ setUpload, editMode = false, videoData , refreshVideos })
             className="p-3 rounded bg-zinc-800 outline-none"
           />
         ) : (
+          // Otherwise show file input
           <input
             type="file"
             name="videoFile"
+            // Accept only video files
             accept="video/*"
             onChange={handleFileChange}
             className="p-3 rounded text-gray-400 bg-zinc-600 cursor-pointer"
           />
         )}
 
+        {/* Submit button */}
         <button
           onClick={handleSubmit}
+          // Disable button while loading
           disabled={loading}
-          className="bg-red-600 p-3 rounded hover:bg-red-700"
+          className="bg-red-600 p-3 rounded hover:bg-red-700 cursor-pointer"
         >
           {loading
             ? editMode
               ? "Updating..."
               : "Uploading..."
             : editMode
-              ? "Updated"
-              : "Uploaded"}
+              ? "Update"
+              : "Upload"}
         </button>
       </div>
     </div>
