@@ -1,46 +1,56 @@
-import React, { useEffect, useState } from 'react'
-import VideoList from '../components/VideoList'
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+// Import VideoList component for displaying video cards
+import VideoList from "../components/VideoList";
+// Import axios for API requests
+import axios from "axios";
 function HomePage() {
-  const [categories, setCategories] = useState(["All"])
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  // State for storing all categories
+  const [categories, setCategories] = useState(["All"]);
+  // State for currently selected category
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Fetch categories when component mounts
   useEffect(() => {
     const fetchVideos = async () => {
       try {
+        // API request to get all videos
         const res = await axios.get("http://localhost:3000/videos");
 
         // extract unique categories
         const uniqueCategories = [
           "All",
-          ...new Set(
-            res.data
-              .map((video) => video.category)
-              .filter(Boolean)
-          ),
+          ...new Set(res.data.map((video) => video.category).filter(Boolean)),
         ];
-
+        // Store categories in state
         setCategories(uniqueCategories);
       } catch (err) {
+        // Show error alert if request fails
         alert("failed to load videos");
       }
     };
-    
+
     fetchVideos();
   }, []);
-  
-  // console.log(categories, "from homepage")
 
   return (
     <div>
-      <div className='flex flex-wrap text-sm gap-4 p-4 text-white'>
+      {/* Category buttons */}
+      <div className="flex flex-wrap text-sm gap-4 p-4 text-white">
         {categories.map((e) => (
-          <button key={e} onClick={() => setSelectedCategory(e)} className={`p-1 md:p-2 rounded-md transition cursor-pointer ${selectedCategory === e ? 'bg-white text-black' : 'bg-gray-800 hover:bg-gray-700'}`}>{e}
+          <button
+            key={e}
+            // Set selected category on click
+            onClick={() => setSelectedCategory(e)}
+            className={`p-1 md:p-2 rounded-md transition cursor-pointer ${selectedCategory === e ? "bg-white text-black" : "bg-gray-800 hover:bg-gray-700"}`}
+          >
+            {e}
           </button>
         ))}
       </div>
+      {/* Show videos according to selected category */}
       <VideoList category={selectedCategory} />
     </div>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;

@@ -1,4 +1,6 @@
 import React from "react";
+
+// Import icons
 import { IoMenu, IoMusicalNoteOutline } from "react-icons/io5";
 import { MdHome, MdSubscriptions, MdHistory } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
@@ -7,23 +9,31 @@ import { AiOutlineShopping } from "react-icons/ai";
 import { BiMovie } from "react-icons/bi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { CiFlag1 } from "react-icons/ci";
+
+// Import navigation tools for routing
 import { Link, useNavigate } from "react-router-dom";
+// Import Auth context for user Authnetication
 import { useAuth } from "../../context/AuthContext";
 
 function Sidebar({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
+  // Getting logged in user from AuthContext
   const { user } = useAuth();
   return (
     <>
+      {/* Sidebar will only render when isOpen is true */}
       {isOpen && (
         <div className="fixed top-0 left-0 h-full bg-black text-white z-50 w-56 transition-transform duration-300 custom-scrollbar overflow-auto">
           <div className="flex items-center gap-4 p-4 bg-black sticky top-0">
+            {/* Hamburger menu icon */}
             <IoMenu
               size={30}
               onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer hover:bg-gray-800 p-1 rounded-full"
             />
+            {/* Youtube logo */}
             <div
+              // onclick navigate on homePage
               onClick={() => navigate("/")}
               className="flex items-center cursor-pointer"
             >
@@ -57,8 +67,10 @@ function Sidebar({ isOpen, setIsOpen }) {
               </div>
             </div>
           </div>
+          {/* Sidebar menu */}
           <div className="p-4">
             <div className="flex flex-col gap-2 text-[15px] pb-2 border-b-1">
+              {/* Functional Home link */}
               <Link
                 to={"/"}
                 className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer"
@@ -66,35 +78,37 @@ function Sidebar({ isOpen, setIsOpen }) {
                 <MdHome size={22} />
                 <span>Home</span>
               </Link>
-
+              {/* Static Shorts link */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <SiYoutubeshorts size={22} />
                 <span>Shorts</span>
               </div>
-
+              {/* Static Subscription option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <MdSubscriptions size={22} />
                 <span>Subscriptions</span>
               </div>
 
+              {/* Static Static You option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <FaRegUserCircle size={22} />
                 <span>You</span>
               </div>
-
+              {/* Static History option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <MdHistory size={22} />
                 <span>History</span>
               </div>
             </div>
-            {user ? (
-              ""
-            ) : (
+
+            {/* If user not logged in */}
+            {!user && (
               <div className="pb-2 flex flex-col gap-2 text-[15px] items-start border-b-1">
                 <div className="p-4">
                   <h1 className=" text-sm">
                     Sign in to like videos, comment, and subscribe.
                   </h1>
+                  {/* Link to navigate on login page */}
                   <Link
                     to={"/login"}
                     className="cursor-pointer flex justify-center text-blue-500 flex items-center gap-2 rounded-full border-1 border-blue px-2 py-1 mt-2 hover:bg-blue-500/30"
@@ -104,25 +118,31 @@ function Sidebar({ isOpen, setIsOpen }) {
                 </div>
               </div>
             )}
+
             <div className="flex flex-col gap-2 pb-2 text-[15px] border-b-1 ">
               <h1 className="pt-4 font-bold">Explore</h1>
+              {/* Static Shopping option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <AiOutlineShopping size={22} />
                 <span>Shopping</span>
               </div>
+              {/* Static Music option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <IoMusicalNoteOutline size={22} />
                 <span>Music</span>
               </div>
+              {/* Static Movies option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <BiMovie size={22} />
                 <span>Movies</span>
               </div>
+              {/* Static show more option */}
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
                 <RiArrowDropDownLine size={22} />
                 <span>Show more</span>
               </div>
             </div>
+              {/* Static more from YouTube section */}
             <div className="flex flex-col gap-2 pb-2 text-[15px] border-b-1 ">
               <h1 className="pt-4 font-bold">More from YouTube</h1>
               <div className="flex items-center gap-4 hover:bg-gray-800 p-2 rounded-lg cursor-pointer">
