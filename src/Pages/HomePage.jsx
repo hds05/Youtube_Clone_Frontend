@@ -25,7 +25,7 @@ function HomePage() {
         setCategories(uniqueCategories);
       } catch (err) {
         // Show error alert if request fails
-        alert("failed to load videos");
+        alert("failed to load videos and fetch the categories...");
       }
     };
 

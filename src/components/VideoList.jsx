@@ -29,7 +29,9 @@ function VideoList({ category }) {
         setVideos(res.data);
       } catch (err) {
         // Show alert on error
-        alert(err.message);
+        alert(
+          "Server is starting... Please wait a few seconds and refresh the page 😊",
+        );
       } finally {
         // Stop loader after API finishes
         setLoading(false);
