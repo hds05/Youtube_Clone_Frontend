@@ -79,90 +79,58 @@ function UploadVideo({
     }
 
     try {
+      // start loading
       setLoading(true);
 
       let res;
 
-// Edit video
-if (editMode) {
+      // create form data
+      const form = new FormData();
 
-  // create form data for edit
-  const form = new FormData();
+      // append basic fields
+      form.append("title", formData.title);
+      form.append("description", formData.description);
+      form.append("category", formData.category);
+      form.append("thumbnailUrl", formData.thumbnailUrl);
+      form.append("videoType", formData.videoType);
 
-  // append basic fields
-  form.append("title", formData.title);
-  form.append("description", formData.description);
-  form.append("category", formData.category);
-  form.append("thumbnailUrl", formData.thumbnailUrl);
-  form.append("videoType", formData.videoType);
-
-  // if youtube video
-  if (formData.videoType === "youtube") {
-
-    // append extracted youtube video id
-    form.append(
-      "videoUrl",
-      extractYoutubeId(formData.videoUrl)
-    );
-
-  } else {
-
-    // append uploaded file if selected
-    if (videoFile) {
-      form.append("video", videoFile);
-    }
-  }
-
-  // API request to update video
-  res = await axios.put(
-    `http://localhost:3000/video/${videoData._id}/edit`,
-    form,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
-
-  alert("Video Updated Successfully");
-} else {
-        // Upload video
-
-        // FormData used for file uploads
-        const form = new FormData();
-
-        // append basic fields
-        form.append("title", formData.title);
-        form.append("description", formData.description);
-        form.append("category", formData.category);
-        form.append("thumbnailUrl", formData.thumbnailUrl);
-        form.append("videoType", formData.videoType);
-
-        // if youtube video
-        if (formData.videoType === "youtube") {
-          // append youtube video id
-          form.append("videoUrl", extractYoutubeId(formData.videoUrl));
-        } else {
-          // append uploaded video file
-          if (videoFile) {
-            form.append("video", videoFile);
-          }
+      // if youtube video
+      if (formData.videoType === "youtube") {
+        // append youtube video id
+        form.append("videoUrl", extractYoutubeId(formData.videoUrl));
+      } else {
+        // check if file selected
+        if (!videoFile) {
+          alert("Please select a video file");
+          return;
         }
 
-        // If user selected upload option
-        if (formData.videoType === "upload") {
-          // Add video file
-          form.append("video", videoFile);
-        }
+        // append uploaded file
+        form.append("video", videoFile);
+      }
 
+      // EDIT VIDEO
+      if (editMode) {
+        // API request to update video
+        res = await axios.put(
+          `http://localhost:3000/video/${videoData._id}/edit`,
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
+
+        alert("Video Updated Successfully");
+      } else {
+        
+        // UPLOAD VIDEO
         // API request to upload video
         res = await axios.post("http://localhost:3000/upload", form, {
           headers: {
-            // Sending token
             Authorization: `Bearer ${token}`,
-
-            // Required for file uploads
             "Content-Type": "multipart/form-data",
           },
         });
@@ -170,12 +138,11 @@ if (editMode) {
         alert("Video Uploaded Successfully");
       }
 
-      // Refresh video list after upload/edit
-      refreshVideos();
-
       // close modal
       setUpload(false);
     } catch (err) {
+      console.log(err);
+
       // Show backend error if available
       alert(err.response?.data?.message || "Operation failed");
     } finally {
