@@ -121,7 +121,7 @@ const appRouter = createBrowserRouter([
   },
 ]);
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     {/* providing authentication context globally */}
     <AuthProvider>
       {/* providing search context globally */}
@@ -130,5 +130,5 @@ createRoot(document.getElementById("root")).render(
         <RouterProvider router={appRouter} />
       </SearchProvider>
     </AuthProvider>
-  </StrictMode>,
+  </>,
 );
