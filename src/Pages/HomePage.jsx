@@ -4,6 +4,9 @@ import VideoList from "../components/VideoList";
 // Import axios for API requests
 import axios from "axios";
 function HomePage() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // State for storing all categories
   const [categories, setCategories] = useState(["All"]);
   // State for currently selected category
@@ -14,7 +17,7 @@ function HomePage() {
     const fetchVideos = async () => {
       try {
         // API request to get all videos
-        const res = await axios.get("http://localhost:3000/videos");
+        const res = await axios.get(`${BASE_URL}/videos`);
 
         // extract unique categories
         const uniqueCategories = [

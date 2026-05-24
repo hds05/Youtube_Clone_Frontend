@@ -10,6 +10,10 @@ import { useSearch } from "../../context/SearchContext";
 import Loader from "./Loader";
 
 function VideoList({ category }) {
+
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // State to store all fetched videos
   const [videos, setVideos] = useState([]);
   // Getting search text from SearchContext
@@ -24,7 +28,7 @@ function VideoList({ category }) {
       try {
         setLoading(true);
         // API request to fetch videos
-        const res = await axios.get("http://localhost:3000/videos");
+        const res = await axios.get(`${BASE_URL}/videos`);
         // Store fetched videos in state
         setVideos(res.data);
       } catch (err) {

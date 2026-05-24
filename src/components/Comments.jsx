@@ -17,6 +17,9 @@ function Comments({ comments = [], videoId }) {
   // State to store edited text while editing comment
   const [editText, setEditText] = useState("");
 
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // navigate variable for navigation
   const navigate = useNavigate();
   // Getting logged in user and token from auth context
@@ -35,7 +38,7 @@ function Comments({ comments = [], videoId }) {
     try {
       // API request to upload comment
       const res = await axios.post(
-        `http://localhost:3000/video/${videoId}/uploadComment`,
+        `${BASE_URL}/video/${videoId}/uploadComment`,
         // Sending comment text
         { text: newComment },
 
@@ -61,7 +64,7 @@ function Comments({ comments = [], videoId }) {
     try {
       // API request to delete comment
       const res = await axios.delete(
-        `http://localhost:3000/video/${videoId}/deleteComment`,
+        `${BASE_URL}/video/${videoId}/deleteComment`,
         {
           // In DELETE request data goes inside "data"
           data: { commentId: id },
@@ -95,7 +98,7 @@ function Comments({ comments = [], videoId }) {
     try {
       // API to update the comment
       const res = await axios.put(
-        `http://localhost:3000/video/${videoId}/editComment`,
+        `${BASE_URL}/video/${videoId}/editComment`,
         {
           // Sending comment ID
           commentId: id,

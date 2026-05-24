@@ -13,6 +13,9 @@ import UploadVideo from "../components/UploadVideo";
 import { MdAdd } from "react-icons/md";
 
 function ChannelPage() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // Get token from Context
   const { token } = useAuth();
   // state to store channel data
@@ -30,7 +33,7 @@ function ChannelPage() {
   // Fetch logged in user's channel data on component mount
   useEffect(() => {
     axios
-      .get("http://localhost:3000/channel/mychannel", {
+      .get(`${BASE_URL}/channel/mychannel`, {
         headers: {
           // Send JWT token
           Authorization: `Bearer ${token}`,

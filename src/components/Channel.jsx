@@ -11,6 +11,9 @@ import Loader from "./Loader";
 import UploadVideo from "./UploadVideo";
 
 function Channel() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // Getting token from AuthContext
   const { token } = useAuth();
 
@@ -26,7 +29,7 @@ function Channel() {
   const fetchMyVideos = async () => {
     try {
       // API request to get logged in user's videos
-      const res = await axios.get("http://localhost:3000/myvideos", {
+      const res = await axios.get(`${BASE_URL}/myvideos`, {
         headers: {
           // Sending token for protected route
           Authorization: `Bearer ${token}`,
@@ -51,7 +54,7 @@ function Channel() {
   const deleteVideo = async (id) => {
     try {
       // API request to delete video
-      await axios.delete(`http://localhost:3000/video/${id}`, {
+      await axios.delete(`${BASE_URL}/video/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

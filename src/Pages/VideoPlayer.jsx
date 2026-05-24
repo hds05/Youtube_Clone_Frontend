@@ -11,6 +11,9 @@ import { useSearch } from "../../context/SearchContext";
 import { useAuth } from "../../context/AuthContext";
 
 function VideoPlayer() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // getting video id from URL params
   const { id } = useParams();
   // getting token for authentication
@@ -34,12 +37,12 @@ function VideoPlayer() {
       try {
         setLoading(true);
         // fetching single video details
-        const videoRes = await axios.get(`http://localhost:3000/video/${id}`);
+        const videoRes = await axios.get(`${BASE_URL}/video/${id}`);
 
         setVideo(videoRes.data);
 
         // fetching all videos
-        const videosRes = await axios.get("http://localhost:3000/videos");
+        const videosRes = await axios.get(`${BASE_URL}/videos`);
         setVideos(videosRes.data);
       } catch (err) {
         console.log(err.message);
@@ -92,7 +95,7 @@ function VideoPlayer() {
         return;
       }
       const res = await axios.put(
-        `http://localhost:3000/video/${video._id}/like`,
+        `${BASE_URL}/video/${video._id}/like`,
         {},
         {
           headers: {
@@ -125,7 +128,7 @@ function VideoPlayer() {
         return;
       }
       const res = await axios.put(
-        `http://localhost:3000/video/${video._id}/dislike`,
+        `${BASE_URL}/video/${video._id}/dislike`,
         {},
         {
           headers: {
@@ -167,7 +170,7 @@ function VideoPlayer() {
                 <video
                   className="w-full h-full"
                   controls
-                  src={`http://localhost:3000${video.videoUrl}`}
+                  src={`${BASE_URL}${video.videoUrl}`}
                 />
               )}
             </div>

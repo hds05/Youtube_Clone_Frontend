@@ -7,6 +7,9 @@ import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function CreateChannel() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // get token from useAuth
   const { token } = useAuth();
   // for page navigation
@@ -42,7 +45,7 @@ function CreateChannel() {
       setLoading(true);
       // API request to create channel
       const res = await axios.post(
-        "http://localhost:3000/channel/create",
+        `${BASE_URL}/channel/create`,
         formData,
         {
           headers: {

@@ -14,6 +14,10 @@ function UploadVideo({
   videoData,
   refreshVideos,
 }) {
+
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // Get token from useAuth
   const { token } = useAuth();
   // for page navigation
@@ -113,7 +117,7 @@ function UploadVideo({
       if (editMode) {
         // API request to update video
         res = await axios.put(
-          `http://localhost:3000/video/${videoData._id}/edit`,
+          `${BASE_URL}/video/${videoData._id}/edit`,
           form,
           {
             headers: {
@@ -128,7 +132,7 @@ function UploadVideo({
         
         // UPLOAD VIDEO
         // API request to upload video
-        res = await axios.post("http://localhost:3000/upload", form, {
+        res = await axios.post(`${BASE_URL}/upload`, form, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",

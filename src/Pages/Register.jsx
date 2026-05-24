@@ -8,6 +8,9 @@ import { IoArrowBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // state to store username input value
   const [name, setName] = useState("");
   // state to store email input value
@@ -26,7 +29,7 @@ function Register() {
     try {
       // sending register request to backend
       const res = await axios.post(
-        "http://localhost:3000/register",
+        `${BASE_URL}/register`,
         // request body
         { name, email, password },
 

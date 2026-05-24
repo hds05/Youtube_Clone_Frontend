@@ -9,6 +9,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 function Login() {
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // hook used to navigate between routes
   const navigate = useNavigate();
   // getting login function from AuthContext
@@ -25,7 +28,7 @@ function Login() {
 
     try {
       // sending login request to backend
-      const res = await axios.post("http://localhost:3000/login", {
+      const res = await axios.post(`${BASE_URL}/login`, {
         email,
         password,
       });

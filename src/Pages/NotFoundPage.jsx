@@ -6,6 +6,9 @@ import { Link, useRouteError } from "react-router-dom";
 // ErrorPage component
 function ErrorPage() {
 
+  // BASE_URL variable for API URL
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  
   // getting error object from react-router
   const error = useRouteError();
 
