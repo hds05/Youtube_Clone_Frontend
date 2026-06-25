@@ -132,6 +132,11 @@ https://drive.google.com/file/d/1Z0EeogeoGG68iyLWuXx_7aaItC3ebuta/view?usp=shari
 git clone https://github.com/hds05/Youtube_Clone_Frontend.git
 ```
 
+Backend repo
+```bash
+git clone https://github.com/hds05/Youtube_clone_Backend.git
+```
+
 ---
 
 ## 2️⃣ Move into Project Folder
